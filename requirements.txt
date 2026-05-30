@@ -1,0 +1,5 @@
+pypdf>=4.0.0
+python-dotenv>=1.0.0
+ocrmypdf>=15.0.0
+rich>=13.0.0
+reportlab>=4.0.0
