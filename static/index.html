@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDFocr Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-icon">📄</span>
+                <span class="brand-name">PDFocr</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-tab="dashboard">
+                    <span class="nav-icon">📊</span> Dashboard
+                </a>
+                <a href="#" class="nav-item" data-tab="files">
+                    <span class="nav-icon">📂</span> File Log
+                </a>
+                <a href="#" class="nav-item" data-tab="settings">
+                    <span class="nav-icon">⚙️</span> Settings
+                </a>
+            </nav>
+            <div class="user-profile">
+                <div class="avatar">👨‍💻</div>
+                <div class="user-info">
+                    <span class="user-name">Local User</span>
+                    <span class="user-role">Host Application</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard View -->
+        <main class="main-content" id="dashboard-tab">
+            <header class="header">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p class="subtitle">System Status: <span id="system-status-badge" class="badge-status idle">Idle</span></p>
+                </div>
+                <button id="trigger-scan-btn" class="btn btn-primary">⚡ Scan Directories</button>
+            </header>
+
+            <!-- Metrics Cards Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="card-glow"></div>
+                    <span class="card-title">Total PDFs</span>
+                    <span class="card-val" id="metric-total">0</span>
+                    <span class="card-sub text-green">System Total</span>
+                </div>
+                <div class="metric-card">
+                    <div class="card-glow"></div>
+                    <span class="card-title">Already Searchable</span>
+                    <span class="card-val" id="metric-searchable">0%</span>
+                    <span class="card-sub text-blue">Text layer detected</span>
+                </div>
+                <div class="metric-card">
+                    <div class="card-glow"></div>
+                    <span class="card-title">OCR Succeeded</span>
+                    <span class="card-val" id="metric-ocr-success">0</span>
+                    <span class="card-sub text-cyan">Converted to searchable</span>
+                </div>
+                <div class="metric-card">
+                    <div class="card-glow"></div>
+                    <span class="card-title">Failures</span>
+                    <span class="card-val text-red" id="metric-failed">0</span>
+                    <span class="card-sub text-dim">Errors/Check failures</span>
+                </div>
+            </div>
+
+            <!-- Directories scan report table -->
+            <section class="section-card">
+                <h2>Scan Report</h2>
+                <div class="table-container">
+                    <table class="data-table" id="directories-table">
+                        <thead>
+                            <tr>
+                                <th>Directory</th>
+                                <th>Progress</th>
+                                <th>Total Files</th>
+                                <th>OCRed / Skipped</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="text-center">No directories scanned yet. Click "Scan Directories" to begin.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Side-by-side Document Preview Section -->
+            <section class="section-card" id="preview-section" style="display: none;">
+                <div class="preview-header">
+                    <h2>Document Preview - <span id="preview-filename">file.pdf</span></h2>
+                    <button class="btn btn-close" id="close-preview-btn">✕ Close</button>
+                </div>
+                <div class="preview-grid">
+                    <div class="preview-panel">
+                        <div class="panel-header badge-status unsearchable">Original Scan (Not Searchable)</div>
+                        <div class="iframe-wrapper">
+                            <iframe id="iframe-original" src=""></iframe>
+                        </div>
+                    </div>
+                    <div class="preview-panel">
+                        <div class="panel-header badge-status searchable">OCR Output (Fully Searchable)</div>
+                        <div class="iframe-wrapper">
+                            <iframe id="iframe-ocr" src=""></iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Files Log Tab -->
+        <main class="main-content" id="files-tab" style="display: none;">
+            <header class="header">
+                <div>
+                    <h1>File Log</h1>
+                    <p class="subtitle">Complete audit list of found PDFs and their OCR statuses</p>
+                </div>
+            </header>
+            
+            <section class="section-card">
+                <div class="table-container">
+                    <table class="data-table" id="files-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Relative Path</th>
+                                <th>Status</th>
+                                <th>Processed At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="text-center">No files indexed yet. Run a scan.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Settings Tab -->
+        <main class="main-content" id="settings-tab" style="display: none;">
+            <header class="header">
+                <div>
+                    <h1>Settings</h1>
+                    <p class="subtitle">Currently loaded system configurations (from .env)</p>
+                </div>
+            </header>
+            
+            <section class="section-card settings-card">
+                <h2>Active Environment Variables</h2>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <span class="setting-lbl">Scan Directories</span>
+                        <code class="setting-val" id="setting-dirs">-</code>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-lbl">OCR Subfolder</span>
+                        <code class="setting-val" id="setting-subfolder">-</code>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-lbl">Log File</span>
+                        <code class="setting-val" id="setting-logfile">-</code>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-lbl">OCR Language</span>
+                        <code class="setting-val" id="setting-lang">-</code>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-lbl">Force OCR</span>
+                        <code class="setting-val" id="setting-force">-</code>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                    <p class="note">⚠️ Note: To edit configurations, please modify your local <code>.env</code> file in the project root directory and restart the application.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

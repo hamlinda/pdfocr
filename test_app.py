@@ -132,5 +132,54 @@ class TestPDFOCRApp(unittest.TestCase):
         ocr_output = self.test_dir / self.ocr_subfolder / f"ocr_{self.non_searchable_path.name}"
         self.assertFalse(ocr_output.exists())
 
+    @patch('ocrmypdf.ocr')
+    def test_run_scan_and_json_report(self, mock_ocr):
+        # Mock ocrmypdf.ocr to succeed
+        def side_effect(input_file, output_file, **kwargs):
+            Path(output_file).touch()
+            return True
+        mock_ocr.side_effect = side_effect
+        
+        # Import app
+        import app
+        import json
+        
+        # Create a mock config pointing to our test directory
+        mock_config = MagicMock()
+        mock_config.scan_directories = [self.test_dir]
+        mock_config.ocr_subfolder = self.ocr_subfolder
+        mock_config.log_file = self.test_dir / "test_pdf_ocr.log"
+        mock_config.ocr_lang = "eng"
+        mock_config.force_ocr = False
+        mock_config.validate.return_value = []
+        
+        # We need to temporarily patch Path("pdf_ocr_data.json") to write inside the temp folder
+        report_path = self.test_dir / "pdf_ocr_data.json"
+        
+        # We patch app.Path to return our temp report_path when accessing "pdf_ocr_data.json"
+        with patch('app.Path') as mock_path:
+            def path_side_effect(*args, **kwargs):
+                if len(args) > 0 and args[0] == "pdf_ocr_data.json":
+                    return report_path
+                return Path(*args, **kwargs)
+            mock_path.side_effect = path_side_effect
+            
+            success = app.run_scan(config=mock_config, console_output=False)
+                
+        self.assertTrue(success)
+        self.assertTrue(report_path.exists())
+        
+        with open(report_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            
+        self.assertEqual(data["stats"]["total_pdfs"], 3)  # searchable, non_searchable, corrupted
+        self.assertEqual(data["stats"]["already_searchable"], 1)
+        self.assertEqual(data["stats"]["ocr_succeeded"], 1)  # non_searchable
+        self.assertEqual(data["stats"]["ocr_failed"], 1)  # corrupted (causes check failure)
+        
+        self.assertIn("config", data)
+        self.assertIn("files", data)
+        self.assertIn("directories", data)
+
 if __name__ == "__main__":
     unittest.main()

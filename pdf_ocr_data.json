@@ -1,0 +1,54 @@
+{
+  "last_scan_time": "2026-05-30T11:39:01.249722",
+  "config": {
+    "scan_directories": [
+      "/mnt/data/dlhdev/pdfocr/test_docs"
+    ],
+    "ocr_subfolder": "_newOCR",
+    "log_file": "/mnt/data/dlhdev/pdfocr/pdf_ocr.log",
+    "ocr_lang": "eng",
+    "force_ocr": false
+  },
+  "stats": {
+    "total_pdfs": 3,
+    "already_searchable": 1,
+    "ocr_succeeded": 1,
+    "ocr_failed": 1
+  },
+  "directories": [
+    {
+      "path": "/mnt/data/dlhdev/pdfocr/test_docs",
+      "total_files": 3,
+      "already_searchable": 1,
+      "ocr_succeeded": 1,
+      "ocr_failed": 1,
+      "status": "Completed"
+    }
+  ],
+  "files": [
+    {
+      "original_path": "/mnt/data/dlhdev/pdfocr/test_docs/broken_sample.pdf",
+      "rel_path": "broken_sample.pdf",
+      "status": "PROCESS_FAILURE",
+      "ocr_path": null,
+      "error": "Stream has ended unexpectedly",
+      "processed_at": "2026-05-30T11:38:58.977455"
+    },
+    {
+      "original_path": "/mnt/data/dlhdev/pdfocr/test_docs/scanned_sample.pdf",
+      "rel_path": "scanned_sample.pdf",
+      "status": "OCR_SUCCESS",
+      "ocr_path": "/mnt/data/dlhdev/pdfocr/test_docs/_newOCR/ocr_scanned_sample.pdf",
+      "error": null,
+      "processed_at": "2026-05-30T11:39:01.247005"
+    },
+    {
+      "original_path": "/mnt/data/dlhdev/pdfocr/test_docs/searchable_sample.pdf",
+      "rel_path": "searchable_sample.pdf",
+      "status": "ALREADY_SEARCHABLE",
+      "ocr_path": null,
+      "error": null,
+      "processed_at": "2026-05-30T11:39:01.248222"
+    }
+  ]
+}
