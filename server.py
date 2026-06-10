@@ -147,25 +147,19 @@ class DashboardHTTPRequestHandler(SimpleHTTPRequestHandler):
         # Default fallback to serve static files
         super().do_GET()
 
-def get_free_port():
-    """Finds an available local port dynamically."""
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(("127.0.0.1", 0))
-    port = s.getsockname()[1]
-    s.close()
-    return port
+
 
 def start_dashboard():
     global LAST_HEARTBEAT
-    port = get_free_port()
-    server_address = ("127.0.0.1", port)
+    port = 44683
+    server_address = ("0.0.0.0", port)
     
     # Create static directory if it does not exist
     STATIC_DIR.mkdir(exist_ok=True)
     
     httpd = HTTPServer(server_address, DashboardHTTPRequestHandler)
-    print(f"\nStarting PDFocr Dashboard on: http://127.0.0.1:{port}")
-    print("Bound strictly to loopback interface 127.0.0.1 (local accessibility only).")
+    print(f"\nStarting PDFocr Dashboard on: http://0.0.0.0:{port}")
+    print("Bound to 0.0.0.0 (accessible to anyone on the local network).")
     print("Closing the browser tab or hitting Ctrl+C will terminate this server.")
     
     # Setup initial heartbeat time
