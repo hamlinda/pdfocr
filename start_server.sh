@@ -17,6 +17,9 @@ source venv/bin/activate
 echo "Installing/updating requirements..."
 pip install -r requirements.txt
 
-# Start the server for clients to access the dashboard
-echo "Starting PDF OCR Dashboard Server..."
-python app.py --dashboard
+# Start the server in the background and save the PID
+echo "Starting PDF OCR Dashboard Server in background..."
+nohup python app.py --dashboard > pdf_ocr_server.log 2>&1 &
+echo $! > server.pid
+echo "Server started in background with PID $(cat server.pid)."
+echo "Logs are being written to pdf_ocr_server.log"
