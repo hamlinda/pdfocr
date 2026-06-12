@@ -14,7 +14,6 @@ from app import run_scan
 
 # Server global variables
 LAST_HEARTBEAT = time.time()
-SHUTDOWN_TIMEOUT = 25.0  # Shutdown if no heartbeat for 25 seconds
 STATIC_DIR = Path(__file__).parent / "static"
 IS_SCANNING = False
 
@@ -160,22 +159,10 @@ def start_dashboard():
     httpd = HTTPServer(server_address, DashboardHTTPRequestHandler)
     print(f"\nStarting PDFocr Dashboard on: http://0.0.0.0:{port}")
     print("Bound to 0.0.0.0 (accessible to anyone on the local network).")
-    print("Closing the browser tab or hitting Ctrl+C will terminate this server.")
+    print("Hitting Ctrl+C will terminate this server.")
     
     # Setup initial heartbeat time
     LAST_HEARTBEAT = time.time()
-    
-    # Heartbeat monitoring loop
-    def monitor_heartbeat():
-        while True:
-            time.sleep(2)
-            elapsed = time.time() - LAST_HEARTBEAT
-            if elapsed > SHUTDOWN_TIMEOUT:
-                print(f"\nNo active browser session detected for {SHUTDOWN_TIMEOUT}s. Auto-shutting down server...")
-                os._exit(0)
-                
-    # Run monitor in daemon thread
-    threading.Thread(target=monitor_heartbeat, daemon=True).start()
     
     # Auto-launch default browser
     url = f"http://127.0.0.1:{port}"
