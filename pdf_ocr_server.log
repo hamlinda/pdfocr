@@ -1,1 +1,19 @@
-Opening in existing browser session.
+Traceback (most recent call last):
+  File "/mnt/data/dlhdev/pdfocr/app.py", line 325, in <module>
+    main()
+    ~~~~^^
+  File "/mnt/data/dlhdev/pdfocr/app.py", line 317, in main
+    start_dashboard()
+    ~~~~~~~~~~~~~~~^^
+  File "/mnt/data/dlhdev/pdfocr/server.py", line 159, in start_dashboard
+    httpd = HTTPServer(server_address, DashboardHTTPRequestHandler)
+  File "/usr/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/usr/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 98] Address already in use
